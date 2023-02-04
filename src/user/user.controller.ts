@@ -1,4 +1,13 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import {
   ApiResponse,
   ApiTags,
@@ -6,6 +15,7 @@ import {
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { UserResponse } from '../../swagger/entities/user';
+import { CreateUserDto } from './dto/createUser.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
@@ -17,7 +27,7 @@ export class UserController {
   @Get()
   @ApiResponse({ status: 200, type: [UserResponse] })
   async getAllUsers(): Promise<UserEntity[]> {
-    return this.userService.getAllUsers();
+    return this.userService.getAll();
   }
 
   @Get(':id')
@@ -27,6 +37,16 @@ export class UserController {
   async getUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<UserEntity> {
-    return this.userService.getUserById(id);
+    return this.userService.getById(id);
+  }
+
+  @Post()
+  @ApiResponse({ status: 201, type: UserResponse })
+  @ApiBadRequestResponse({
+    description: 'body does not contain required fields',
+  })
+  @UsePipes(new ValidationPipe())
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
+    return this.userService.create(createUserDto);
   }
 }
