@@ -9,6 +9,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
+import * as INFO from './constants';
 
 @Injectable()
 export class UserService {
@@ -24,7 +25,7 @@ export class UserService {
     const user = this.userRepository.get(id);
 
     if (!user) {
-      throw new NotFoundException('user not found');
+      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
     return this.buildResponse(user);
@@ -52,13 +53,13 @@ export class UserService {
     const user = this.userRepository.get(id);
 
     if (!user) {
-      throw new NotFoundException('user not found');
+      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
     const isMatchPassword = await compare(body.oldPassword, user.password);
 
     if (!isMatchPassword) {
-      throw new ForbiddenException('Old password is incorrect');
+      throw new ForbiddenException(INFO.INCORRECT_PASSWORD_ERROR);
     }
 
     const updatedUser = new UserEntity(user);
@@ -72,7 +73,7 @@ export class UserService {
     const user = this.userRepository.get(id);
 
     if (!user) {
-      throw new NotFoundException('user not found');
+      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
     return this.userRepository.delete(id);

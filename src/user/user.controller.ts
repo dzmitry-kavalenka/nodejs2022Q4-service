@@ -65,7 +65,10 @@ export class UserController {
     description: `${INFO.UUID_ERROR} or ${INFO.REQUIRED_FIELDS_ERROR}`,
   })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
-  @ApiForbiddenResponse({ status: 403, description: 'oldPassword is wrong' })
+  @ApiForbiddenResponse({
+    status: 403,
+    description: INFO.INCORRECT_PASSWORD_ERROR,
+  })
   @UseInterceptors(ClassSerializerInterceptor)
   async updatePassword(
     @Param('id', new ParseUUIDPipe()) id: string,
