@@ -1,16 +1,14 @@
-import { InMemoryDBService } from '@nestjs-addons/in-memory-db';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidV4 } from 'uuid';
 import * as INFO from '../constants';
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
 import { TrackEntity } from './track.entity';
+import { TrackRepository } from './track.repository';
 
 @Injectable()
 export class TrackService {
-  constructor(
-    private readonly trackRepository: InMemoryDBService<TrackEntity>,
-  ) {}
+  constructor(private readonly trackRepository: TrackRepository) {}
 
   async getAll(): Promise<TrackEntity[]> {
     return this.trackRepository.getAll();

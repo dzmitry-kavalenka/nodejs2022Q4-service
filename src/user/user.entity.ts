@@ -18,10 +18,9 @@ export class UserEntity implements InMemoryDBEntity {
 
   async hashPassword(password: string) {
     this.password = await hash(password, 10);
-    this.updateVersion();
   }
 
-  private updateVersion() {
+  updateVersion() {
     this.version += 1;
     this.updateUpdatedAt();
   }

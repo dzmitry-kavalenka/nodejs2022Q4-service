@@ -33,12 +33,14 @@ export class UserService {
   }
 
   async create(body: CreateUserDto): Promise<UserEntity> {
+    const timestamp = Date.now();
+
     const newUser = new UserEntity({
       id: uuidV4(),
       login: body.login,
-      version: 0,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      version: 1,
+      createdAt: timestamp,
+      updatedAt: timestamp,
     });
 
     await newUser.hashPassword(body.password);
@@ -65,6 +67,7 @@ export class UserService {
 
     const updatedUser = new UserEntity(user);
     await updatedUser.hashPassword(body.newPassword);
+    updatedUser.updateVersion();
 
     this.userRepository.update(updatedUser);
     return updatedUser;

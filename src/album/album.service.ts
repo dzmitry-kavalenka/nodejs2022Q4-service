@@ -1,17 +1,17 @@
-import { InMemoryDBService } from '@nestjs-addons/in-memory-db';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidV4 } from 'uuid';
 import { AlbumEntity } from './album.entity';
 import * as INFO from '../constants';
+import { TrackRepository } from '../track/track.repository';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
-import { TrackEntity } from 'src/track/track.entity';
+import { AlbumRepository } from './album.repository';
 
 @Injectable()
 export class AlbumService {
   constructor(
-    private readonly albumRepository: InMemoryDBService<AlbumEntity>,
-    private readonly trackRepository: InMemoryDBService<TrackEntity>,
+    private readonly albumRepository: AlbumRepository,
+    private readonly trackRepository: TrackRepository,
   ) {}
 
   async getAll(): Promise<AlbumEntity[]> {
