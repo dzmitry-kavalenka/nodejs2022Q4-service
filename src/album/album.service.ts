@@ -5,11 +5,13 @@ import { AlbumEntity } from './album.entity';
 import * as INFO from '../constants';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
+import { TrackEntity } from 'src/track/track.entity';
 
 @Injectable()
 export class AlbumService {
   constructor(
     private readonly albumRepository: InMemoryDBService<AlbumEntity>,
+    private readonly trackRepository: InMemoryDBService<TrackEntity>,
   ) {}
 
   async getAll(): Promise<AlbumEntity[]> {
@@ -60,6 +62,12 @@ export class AlbumService {
       throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
-    return this.albumRepository.delete(id);
+    this.albumRepository.delete(id);
+
+    this.trackRepository
+      .query(({ albumId }) => albumId === id)
+      .forEach((track) =>
+        this.trackRepository.update({ ...track, albumId: null }),
+      );
   }
 }
