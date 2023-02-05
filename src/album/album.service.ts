@@ -3,6 +3,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { AlbumEntity } from './album.entity';
 import * as INFO from '../constants';
 import { TrackRepository } from '../track/track.repository';
+import { FavoritesRepository } from '../favorites/favorites.repository';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
 import { AlbumRepository } from './album.repository';
@@ -12,6 +13,7 @@ export class AlbumService {
   constructor(
     private readonly albumRepository: AlbumRepository,
     private readonly trackRepository: TrackRepository,
+    private readonly favoritesRepository: FavoritesRepository,
   ) {}
 
   async getAll(): Promise<AlbumEntity[]> {
@@ -69,5 +71,14 @@ export class AlbumService {
       .forEach((track) =>
         this.trackRepository.update({ ...track, albumId: null }),
       );
+
+    const [favorites] = this.favoritesRepository.getAll();
+
+    if (favorites.albums.includes(id)) {
+      this.favoritesRepository.update({
+        ...favorites,
+        albums: favorites.albums.filter((albumId) => albumId !== id),
+      });
+    }
   }
 }
