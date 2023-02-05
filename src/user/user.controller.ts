@@ -5,13 +5,12 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   Param,
   ParseUUIDPipe,
   Post,
   Put,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiResponse,
@@ -19,8 +18,10 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { UserResponse } from '../../swagger/entities/user';
+import { UUID_ERROR, REQUIRED_FIELDS_ERROR } from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
@@ -29,21 +30,20 @@ import * as INFO from './constants';
 
 @ApiTags('User')
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @ApiResponse({ status: 200, type: [UserResponse] })
-  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiResponse({ status: HttpStatus.OK, type: [UserResponse] })
   async getAllUsers(): Promise<UserEntity[]> {
     return this.userService.getAll();
   }
 
   @Get(':id')
-  @ApiResponse({ status: 200, type: UserResponse })
-  @ApiBadRequestResponse({ description: INFO.UUID_ERROR })
+  @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
+  @ApiBadRequestResponse({ description: UUID_ERROR })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
-  @UseInterceptors(ClassSerializerInterceptor)
   async getUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<UserEntity> {
@@ -51,25 +51,22 @@ export class UserController {
   }
 
   @Post()
-  @ApiResponse({ status: 201, type: UserResponse })
-  @ApiBadRequestResponse({ description: INFO.REQUIRED_FIELDS_ERROR })
-  @UseInterceptors(ClassSerializerInterceptor)
-  @UsePipes(new ValidationPipe())
+  @ApiResponse({ status: HttpStatus.CREATED, type: UserResponse })
+  @ApiBadRequestResponse({ description: REQUIRED_FIELDS_ERROR })
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.userService.create(createUserDto);
   }
 
   @Put(':id')
-  @ApiResponse({ status: 200, type: UserResponse })
+  @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   @ApiBadRequestResponse({
-    description: `${INFO.UUID_ERROR} or ${INFO.REQUIRED_FIELDS_ERROR}`,
+    description: `${UUID_ERROR} or ${REQUIRED_FIELDS_ERROR}`,
   })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   @ApiForbiddenResponse({
-    status: 403,
+    status: HttpStatus.FORBIDDEN,
     description: INFO.INCORRECT_PASSWORD_ERROR,
   })
-  @UseInterceptors(ClassSerializerInterceptor)
   async updatePassword(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updatePasswordrDto: UpdatePasswordDto,
@@ -78,9 +75,12 @@ export class UserController {
   }
 
   @Delete(':id')
-  @HttpCode(204)
-  @ApiResponse({ status: 204, description: 'user is found and deleted' })
-  @ApiBadRequestResponse({ description: INFO.UUID_ERROR })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiNoContentResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'user is found and deleted',
+  })
+  @ApiBadRequestResponse({ description: UUID_ERROR })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.delete(id);
