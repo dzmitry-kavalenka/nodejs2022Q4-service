@@ -7,8 +7,10 @@ export class ArtistResponse {
     description: 'uuid v4',
   })
   id: string;
+
   @ApiProperty({ example: 'John Lennon' })
   name: string;
+
   @ApiProperty({ example: true })
   grammy: boolean;
 }

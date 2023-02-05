@@ -1,8 +1,9 @@
 import { InMemoryDBService } from '@nestjs-addons/in-memory-db';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { AlbumEntity } from 'src/album/album.entity';
 import { v4 as uuidV4 } from 'uuid';
+import * as INFO from '../constants';
 import { ArtistEntity } from './artist.entity';
-import * as INFO from './constants';
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
 
@@ -10,6 +11,7 @@ import { UpdateArtistDto } from './dto/updateArtist.dto';
 export class ArtistService {
   constructor(
     private readonly artistRepository: InMemoryDBService<ArtistEntity>,
+    private readonly albumRepository: InMemoryDBService<AlbumEntity>,
   ) {}
 
   async getAll(): Promise<ArtistEntity[]> {
@@ -55,6 +57,14 @@ export class ArtistService {
       throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
-    return this.artistRepository.delete(id);
+    this.artistRepository.delete(id);
+
+    const artistAlbums = this.albumRepository.query(
+      ({ artistId }) => artistId === id,
+    );
+
+    artistAlbums.forEach((album) =>
+      this.albumRepository.update({ ...album, artistId: null }),
+    );
   }
 }

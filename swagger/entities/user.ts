@@ -7,15 +7,19 @@ export class UserResponse {
     description: 'uuid v4',
   })
   id: string;
+
   @ApiProperty({ example: 'John' })
   login: string;
+
   @ApiProperty({
     example: 1,
     description: 'integer number, increments on update',
   })
   version: number;
+
   @ApiProperty({ example: 1675515543, description: 'timestamp of creation' })
   createdAt: number;
+
   @ApiProperty({ example: 1675519143, description: 'timestamp of last update' })
   updatedAt: number;
 }

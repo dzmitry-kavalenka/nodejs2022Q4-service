@@ -6,10 +6,11 @@ import {
 } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { v4 as uuidV4 } from 'uuid';
+import * as INFO from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
-import * as INFO from './constants';
+import { INCORRECT_PASSWORD_ERROR } from './constants';
 
 @Injectable()
 export class UserService {
@@ -59,7 +60,7 @@ export class UserService {
     const isMatchPassword = await compare(body.oldPassword, user.password);
 
     if (!isMatchPassword) {
-      throw new ForbiddenException(INFO.INCORRECT_PASSWORD_ERROR);
+      throw new ForbiddenException(INCORRECT_PASSWORD_ERROR);
     }
 
     const updatedUser = new UserEntity(user);

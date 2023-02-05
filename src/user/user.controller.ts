@@ -21,12 +21,12 @@ import {
   ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { UserResponse } from '../../swagger/entities/user';
-import { UUID_ERROR, REQUIRED_FIELDS_ERROR } from '../constants';
+import * as INFO from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
-import * as INFO from './constants';
+import { INCORRECT_PASSWORD_ERROR } from './constants';
 
 @ApiTags('User')
 @Controller('user')
@@ -42,7 +42,7 @@ export class UserController {
 
   @Get(':id')
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
-  @ApiBadRequestResponse({ description: UUID_ERROR })
+  @ApiBadRequestResponse({ description: INFO.UUID_ERROR })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   async getUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -52,7 +52,7 @@ export class UserController {
 
   @Post()
   @ApiResponse({ status: HttpStatus.CREATED, type: UserResponse })
-  @ApiBadRequestResponse({ description: REQUIRED_FIELDS_ERROR })
+  @ApiBadRequestResponse({ description: INFO.REQUIRED_FIELDS_ERROR })
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.userService.create(createUserDto);
   }
@@ -60,12 +60,12 @@ export class UserController {
   @Put(':id')
   @ApiResponse({ status: HttpStatus.OK, type: UserResponse })
   @ApiBadRequestResponse({
-    description: `${UUID_ERROR} or ${REQUIRED_FIELDS_ERROR}`,
+    description: `${INFO.UUID_ERROR} or ${INFO.REQUIRED_FIELDS_ERROR}`,
   })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   @ApiForbiddenResponse({
     status: HttpStatus.FORBIDDEN,
-    description: INFO.INCORRECT_PASSWORD_ERROR,
+    description: INCORRECT_PASSWORD_ERROR,
   })
   async updatePassword(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -80,7 +80,7 @@ export class UserController {
     status: HttpStatus.NO_CONTENT,
     description: 'user is found and deleted',
   })
-  @ApiBadRequestResponse({ description: UUID_ERROR })
+  @ApiBadRequestResponse({ description: INFO.UUID_ERROR })
   @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.delete(id);
