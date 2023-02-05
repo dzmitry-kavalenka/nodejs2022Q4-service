@@ -25,6 +25,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
+import * as INFO from './constants';
 
 @ApiTags('User')
 @Controller('user')
@@ -40,8 +41,8 @@ export class UserController {
 
   @Get(':id')
   @ApiResponse({ status: 200, type: UserResponse })
-  @ApiBadRequestResponse({ description: 'id must be valid uuid' })
-  @ApiNotFoundResponse({ description: 'user not found' })
+  @ApiBadRequestResponse({ description: INFO.UUID_ERROR })
+  @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   @UseInterceptors(ClassSerializerInterceptor)
   async getUserById(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -51,9 +52,7 @@ export class UserController {
 
   @Post()
   @ApiResponse({ status: 201, type: UserResponse })
-  @ApiBadRequestResponse({
-    description: 'body does not contain required fields',
-  })
+  @ApiBadRequestResponse({ description: INFO.REQUIRED_FIELDS_ERROR })
   @UseInterceptors(ClassSerializerInterceptor)
   @UsePipes(new ValidationPipe())
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -63,10 +62,9 @@ export class UserController {
   @Put(':id')
   @ApiResponse({ status: 200, type: UserResponse })
   @ApiBadRequestResponse({
-    description:
-      'id must be valid uuid or body does not contain required fields',
+    description: `${INFO.UUID_ERROR} or ${INFO.REQUIRED_FIELDS_ERROR}`,
   })
-  @ApiNotFoundResponse({ description: 'user not found' })
+  @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   @ApiForbiddenResponse({ status: 403, description: 'oldPassword is wrong' })
   @UseInterceptors(ClassSerializerInterceptor)
   async updatePassword(
@@ -79,8 +77,8 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   @ApiResponse({ status: 204, description: 'user is found and deleted' })
-  @ApiBadRequestResponse({ description: 'id must be valid uuid' })
-  @ApiNotFoundResponse({ description: 'user not found' })
+  @ApiBadRequestResponse({ description: INFO.UUID_ERROR })
+  @ApiNotFoundResponse({ description: INFO.NOT_FOUND_ERROR })
   async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.delete(id);
   }
