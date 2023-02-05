@@ -68,6 +68,16 @@ export class UserService {
     return updatedUser;
   }
 
+  async delete(id: string) {
+    const user = this.userRepository.get(id);
+
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    return this.userRepository.delete(id);
+  }
+
   buildResponse(user: UserEntity) {
     return new UserEntity(user);
   }

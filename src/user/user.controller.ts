@@ -2,7 +2,9 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -72,5 +74,14 @@ export class UserController {
     @Body() updatePasswordrDto: UpdatePasswordDto,
   ): Promise<UserEntity> {
     return this.userService.updatePassword(id, updatePasswordrDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiResponse({ status: 204, description: 'user is found and deleted' })
+  @ApiBadRequestResponse({ description: 'id must be valid uuid' })
+  @ApiNotFoundResponse({ description: 'user not found' })
+  async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.userService.delete(id);
   }
 }
