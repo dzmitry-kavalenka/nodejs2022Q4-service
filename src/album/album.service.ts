@@ -29,6 +29,7 @@ export class AlbumService {
   async create(body: CreateAlbumDto): Promise<AlbumEntity> {
     const newAlbum = new AlbumEntity({
       id: uuidV4(),
+      artistId: body.artistId || null,
       ...body,
     });
 
@@ -42,7 +43,11 @@ export class AlbumService {
       throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
-    const updatedAlbum = new AlbumEntity({ id: album.id, ...body });
+    const updatedAlbum = new AlbumEntity({
+      id: album.id,
+      artistId: body.artistId || album.artistId,
+      ...body,
+    });
 
     this.albumRepository.update(updatedAlbum);
     return updatedAlbum;
