@@ -9,5 +9,5 @@ export const swaggerSetup = (app: INestApplication) => {
     .addTag('Rest API')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('/doc', app, document);
 };
