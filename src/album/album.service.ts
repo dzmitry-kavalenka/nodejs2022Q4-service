@@ -74,7 +74,7 @@ export class AlbumService {
 
     const [favorites] = this.favoritesRepository.getAll();
 
-    if (favorites.albums.includes(id)) {
+    if (favorites?.albums.includes(id)) {
       this.favoritesRepository.update({
         ...favorites,
         albums: favorites.albums.filter((albumId) => albumId !== id),

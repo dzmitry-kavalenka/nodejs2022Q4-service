@@ -68,7 +68,7 @@ export class TrackService {
 
     const [favorites] = this.favoritesRepository.getAll();
 
-    if (favorites.tracks.includes(id)) {
+    if (favorites?.tracks.includes(id)) {
       this.favoritesRepository.update({
         ...favorites,
         tracks: favorites.tracks.filter((trackId) => trackId !== id),

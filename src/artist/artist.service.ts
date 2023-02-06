@@ -77,7 +77,7 @@ export class ArtistService {
 
     const [favorites] = this.favoritesRepository.getAll();
 
-    if (favorites.artists.includes(id)) {
+    if (favorites?.artists.includes(id)) {
       this.favoritesRepository.update({
         ...favorites,
         artists: favorites.artists.filter((artistId) => artistId !== id),
