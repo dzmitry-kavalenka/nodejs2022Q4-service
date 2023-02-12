@@ -1,29 +1,27 @@
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidV4 } from 'uuid';
 import * as INFO from '../constants';
-import { TrackRepository } from '../track/track.repository';
-import { AlbumRepository } from '../album/album.repository';
-import { FavoritesRepository } from '../favorites/favorites.repository';
+// import { TrackEntity } from '../track/track.entity';
+// import { AlbumEntity } from '../album/album.entity';
 import { ArtistEntity } from './artist.entity';
 import { CreateArtistDto } from './dto/createArtist.dto';
 import { UpdateArtistDto } from './dto/updateArtist.dto';
-import { ArtistRepository } from './artist.repository';
+// import { FavoritesEntity } from '../favorites/favorites.entity';
 
 @Injectable()
 export class ArtistService {
   constructor(
-    private readonly artistRepository: ArtistRepository,
-    private readonly albumRepository: AlbumRepository,
-    private readonly trackRepository: TrackRepository,
-    private readonly favoritesRepository: FavoritesRepository,
+    @InjectRepository(ArtistEntity)
+    private readonly artistRepository: Repository<ArtistEntity>, // @InjectRepository(AlbumEntity) // private readonly albumRepository: Repository<AlbumEntity>, // @InjectRepository(TrackEntity) // private readonly trackRepository: Repository<TrackEntity>, // @InjectRepository(FavoritesEntity) // private readonly favoritesRepository: Repository<FavoritesEntity>,
   ) {}
 
   async getAll(): Promise<ArtistEntity[]> {
-    return this.artistRepository.getAll();
+    return this.artistRepository.find();
   }
 
   async getById(id: string): Promise<ArtistEntity> {
-    const artist = this.artistRepository.get(id);
+    const artist = await this.artistRepository.findOneBy({ id });
 
     if (!artist) {
       throw new NotFoundException(INFO.NOT_FOUND_ERROR);
@@ -32,56 +30,52 @@ export class ArtistService {
     return artist;
   }
 
-  async create(body: CreateArtistDto): Promise<ArtistEntity> {
-    const newArtist = new ArtistEntity({
-      id: uuidV4(),
-      ...body,
-    });
+  async create(createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
+    const newArtist = new ArtistEntity();
 
-    return this.artistRepository.create(newArtist);
+    Object.assign(newArtist, createArtistDto);
+    return this.artistRepository.save(newArtist);
   }
 
-  async update(id: string, body: UpdateArtistDto): Promise<ArtistEntity> {
-    const artist = this.artistRepository.get(id);
+  async update(
+    id: string,
+    updateArtistDto: UpdateArtistDto,
+  ): Promise<ArtistEntity> {
+    const artist = await this.getById(id);
 
-    if (!artist) {
-      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
-    }
-
-    const updatedArtist = new ArtistEntity({ id: artist.id, ...body });
-
-    this.artistRepository.update(updatedArtist);
-    return updatedArtist;
+    Object.assign(artist, updateArtistDto);
+    return this.artistRepository.save(artist);
   }
 
   async delete(id: string) {
-    const artist = this.artistRepository.get(id);
+    const artist = await this.getById(id);
 
-    if (!artist) {
-      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
-    }
+    await this.artistRepository.delete(artist.id);
 
-    this.artistRepository.delete(id);
+    // const artistAlbums = await this.albumRepository.findBy({
+    //   artistId: artist.id,
+    // });
 
-    this.albumRepository
-      .query(({ artistId }) => artistId === id)
-      .forEach((album) =>
-        this.albumRepository.update({ ...album, artistId: null }),
-      );
+    // const artistTracks = await this.trackRepository.findBy({
+    //   artistId: artist.id,
+    // });
 
-    this.trackRepository
-      .query(({ artistId }) => artistId === id)
-      .forEach((track) =>
-        this.trackRepository.update({ ...track, artistId: null }),
-      );
+    // await Promise.all([
+    //   ...artistAlbums.map((album) =>
+    //     this.albumRepository.save({ ...album, artistId: null }),
+    //   ),
+    //   ...artistTracks.map((track) =>
+    //     this.trackRepository.save({ ...track, artistId: null }),
+    //   ),
+    // ]);
 
-    const [favorites] = this.favoritesRepository.getAll();
+    // const [favorites] = await this.favoritesRepository.find();
 
-    if (favorites?.artists.includes(id)) {
-      this.favoritesRepository.update({
-        ...favorites,
-        artists: favorites.artists.filter((artistId) => artistId !== id),
-      });
-    }
+    // if (favorites?.artists.includes(id)) {
+    //   this.favoritesRepository.save({
+    //     ...favorites,
+    //     artists: favorites.artists.filter((artistId) => artistId !== id),
+    //   });
+    // }
   }
 }
