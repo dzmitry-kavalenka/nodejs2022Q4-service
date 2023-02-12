@@ -1,13 +1,19 @@
-import { InMemoryDBEntity } from '@nestjs-addons/in-memory-db';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export class TrackEntity implements InMemoryDBEntity {
+@Entity('tracks')
+export class TrackEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-  name: string;
-  artistId: string | null;
-  albumId: string | null;
-  duration: number;
 
-  constructor(partial: Partial<TrackEntity>) {
-    Object.assign(this, partial);
-  }
+  @Column()
+  name: string;
+
+  @Column({ type: 'uuid', nullable: true, default: null })
+  artistId: string;
+
+  @Column({ type: 'uuid', nullable: true, default: null })
+  albumId: string;
+
+  @Column()
+  duration: number;
 }

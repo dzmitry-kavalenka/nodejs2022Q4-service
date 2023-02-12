@@ -44,11 +44,7 @@ export class UserService {
     id: string,
     body: UpdatePasswordDto,
   ): Promise<UserEntity> {
-    const user = await this.userRepository.findOneBy({ id });
-
-    if (!user) {
-      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
-    }
+    const user = await this.getById(id);
 
     const isMatchPassword = await compare(body.oldPassword, user.password);
 
@@ -61,12 +57,8 @@ export class UserService {
   }
 
   async delete(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.getById(id);
 
-    if (!user) {
-      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
-    }
-
-    return this.userRepository.delete(id);
+    return this.userRepository.delete(user.id);
   }
 }
