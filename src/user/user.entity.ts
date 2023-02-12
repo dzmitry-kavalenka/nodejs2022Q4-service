@@ -1,5 +1,5 @@
 import { hash } from 'bcrypt';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 import {
   Column,
   Entity,
@@ -22,16 +22,12 @@ export class UserEntity {
   @VersionColumn()
   version: number;
 
-  @CreateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
+  @CreateDateColumn()
+  @Transform(({ value }) => Date.parse(value))
   createdAt: number;
 
-  @UpdateDateColumn({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-  })
+  @UpdateDateColumn()
+  @Transform(({ value }) => Date.parse(value))
   updatedAt: number;
 
   @Exclude()
