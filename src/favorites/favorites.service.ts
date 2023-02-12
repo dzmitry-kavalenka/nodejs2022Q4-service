@@ -3,69 +3,76 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { FavoritesResponse } from '../../swagger/entities/favorites';
-import { AlbumRepository } from '../album/album.repository';
-import { TrackRepository } from '../track/track.repository';
-import { ArtistRepository } from '../artist/artist.repository';
 import * as INFO from '../constants';
-import { initialFavorites, UNPROCESSABLE_ERROR } from './constants';
+import { TrackEntity } from '../track/track.entity';
+import { AlbumEntity } from '../album/album.entity';
+import { ArtistEntity } from '../artist/artist.entity';
 import { FavoritesEntity } from './favorites.entity';
-import { FavoritesRepository } from './favorites.repository';
+import { initialFavorites, UNPROCESSABLE_ERROR } from './constants';
 
 @Injectable()
 export class FavoritesService {
   constructor(
-    private readonly favoritesRepository: FavoritesRepository,
-    private readonly artistRepository: ArtistRepository,
-    private readonly albumRepository: AlbumRepository,
-    private readonly trackRepository: TrackRepository,
+    @InjectRepository(FavoritesEntity)
+    private readonly favoritesRepository: Repository<FavoritesEntity>,
+    @InjectRepository(ArtistEntity)
+    private readonly artistRepository: Repository<ArtistEntity>,
+    @InjectRepository(AlbumEntity)
+    private readonly albumRepository: Repository<AlbumEntity>,
+    @InjectRepository(TrackEntity)
+    private readonly trackRepository: Repository<TrackEntity>,
   ) {}
 
   async getAll(): Promise<FavoritesResponse> {
-    const [favorites] = this.favoritesRepository.getAll();
+    const [favorites] = await this.favoritesRepository.find();
 
-    if (!favorites) {
-      return initialFavorites;
-    }
-
-    const artists = favorites.artists.map((artistId) =>
-      this.artistRepository.get(artistId),
+    const [artists] = await Promise.all(
+      favorites.artists.map((artistId) =>
+        this.artistRepository.findBy({ id: artistId }),
+      ),
     );
-    const albums = favorites.albums.map((albumId) =>
-      this.albumRepository.get(albumId),
+    const [albums] = await Promise.all(
+      favorites.albums.map((albumId) =>
+        this.albumRepository.findBy({ id: albumId }),
+      ),
     );
-    const tracks = favorites.tracks.map((trackId) =>
-      this.trackRepository.get(trackId),
+    const [tracks] = await Promise.all(
+      favorites.tracks.map((trackId) =>
+        this.trackRepository.findBy({ id: trackId }),
+      ),
     );
 
     return { artists, albums, tracks };
   }
 
   async addToFavorites(id: string, type: 'track' | 'album' | 'artist') {
-    const record = this[`${type}Repository`].get(id);
+    const record = this[`${type}Repository`].findOneBy({ id });
 
     if (!record) {
       throw new UnprocessableEntityException(UNPROCESSABLE_ERROR);
     }
 
-    const [favorites] = this.favoritesRepository.getAll();
+    const [favorites] = await this.favoritesRepository.find();
     const favsToUpdate = (favorites || initialFavorites) as FavoritesEntity;
 
-    this.favoritesRepository.update({
+    this.favoritesRepository.save({
       ...favsToUpdate,
       [`${type}s`]: [...new Set([...favsToUpdate[`${type}s`], id])],
     });
   }
 
   async deleteFromFavorites(id: string, type: 'track' | 'album' | 'artist') {
-    const [favorites] = this.favoritesRepository.getAll();
+    const [favorites] = await this.favoritesRepository.find();
     const favsToUpdate = (favorites || initialFavorites) as FavoritesEntity;
 
     if (!favsToUpdate[`${type}s`].includes(id)) {
       throw new NotFoundException(INFO.NOT_FOUND_ERROR);
     }
 
-    this.favoritesRepository.update({
+    this.favoritesRepository.save({
       ...favsToUpdate,
       [`${type}s`]: favsToUpdate[`${type}s`].filter((favId) => favId !== id),
     });
