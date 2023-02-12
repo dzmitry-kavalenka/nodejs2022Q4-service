@@ -1,12 +1,20 @@
-import { InMemoryDBEntity } from '@nestjs-addons/in-memory-db';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ArtistEntity } from '../artist/artist.entity';
 
-export class AlbumEntity implements InMemoryDBEntity {
+@Entity('albums')
+export class AlbumEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-  name: string;
-  year: number;
-  artistId: string | null;
 
-  constructor(partial: Partial<AlbumEntity>) {
-    Object.assign(this, partial);
-  }
+  @Column()
+  name: string;
+
+  @Column()
+  year: number;
+
+  @ManyToOne(() => ArtistEntity, (artist) => artist.id, {
+    onDelete: 'SET NULL',
+  })
+  @Column({ type: 'uuid', nullable: true, default: null })
+  artistId: string;
 }

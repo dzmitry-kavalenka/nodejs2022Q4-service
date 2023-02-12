@@ -1,27 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidV4 } from 'uuid';
-import { AlbumEntity } from './album.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import * as INFO from '../constants';
-import { TrackRepository } from '../track/track.repository';
-import { FavoritesRepository } from '../favorites/favorites.repository';
+// import { FavoritesEntity } from '../favorites/favorites.entity';
+// import { TrackEntity } from '../track/track.entity';
+import { AlbumEntity } from './album.entity';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
-import { AlbumRepository } from './album.repository';
 
 @Injectable()
 export class AlbumService {
   constructor(
-    private readonly albumRepository: AlbumRepository,
-    private readonly trackRepository: TrackRepository,
-    private readonly favoritesRepository: FavoritesRepository,
+    @InjectRepository(AlbumEntity)
+    private readonly albumRepository: Repository<AlbumEntity>, // @InjectRepository(TrackEntity) // private readonly trackRepository: Repository<TrackEntity>, // @InjectRepository(FavoritesEntity) // private readonly favoritesRepository: Repository<FavoritesEntity>,
   ) {}
 
   async getAll(): Promise<AlbumEntity[]> {
-    return this.albumRepository.getAll();
+    return this.albumRepository.find();
   }
 
   async getById(id: string): Promise<AlbumEntity> {
-    const album = this.albumRepository.get(id);
+    const album = await this.albumRepository.findOneBy({ id });
 
     if (!album) {
       throw new NotFoundException(INFO.NOT_FOUND_ERROR);
@@ -30,55 +29,44 @@ export class AlbumService {
     return album;
   }
 
-  async create(body: CreateAlbumDto): Promise<AlbumEntity> {
-    const newAlbum = new AlbumEntity({
-      id: uuidV4(),
-      artistId: body.artistId || null,
-      ...body,
-    });
-
-    return this.albumRepository.create(newAlbum);
+  async create(createAlbumDto: CreateAlbumDto): Promise<AlbumEntity> {
+    const newAlbum = new AlbumEntity();
+    Object.assign(newAlbum, createAlbumDto);
+    return this.albumRepository.save(newAlbum);
   }
 
-  async update(id: string, body: UpdateAlbumDto): Promise<AlbumEntity> {
-    const album = this.albumRepository.get(id);
+  async update(
+    id: string,
+    updateAlbumDto: UpdateAlbumDto,
+  ): Promise<AlbumEntity> {
+    const album = await this.getById(id);
 
-    if (!album) {
-      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
-    }
-
-    const updatedAlbum = new AlbumEntity({
-      id: album.id,
-      artistId: body.artistId || album.artistId,
-      ...body,
-    });
-
-    this.albumRepository.update(updatedAlbum);
-    return updatedAlbum;
+    Object.assign(album, updateAlbumDto);
+    return this.albumRepository.save(album);
   }
 
   async delete(id: string) {
-    const album = this.albumRepository.get(id);
+    const album = await this.getById(id);
 
-    if (!album) {
-      throw new NotFoundException(INFO.NOT_FOUND_ERROR);
-    }
+    await this.albumRepository.delete(album.id);
 
-    this.albumRepository.delete(id);
+    // const albumTracks = await this.trackRepository.findBy({
+    //   albumId: album.id,
+    // });
 
-    this.trackRepository
-      .query(({ albumId }) => albumId === id)
-      .forEach((track) =>
-        this.trackRepository.update({ ...track, albumId: null }),
-      );
+    // await Promise.all(
+    //   albumTracks.map((track) =>
+    //     this.trackRepository.save({ ...track, albumId: null }),
+    //   ),
+    // );
 
-    const [favorites] = this.favoritesRepository.getAll();
+    // const [favorites] = await this.favoritesRepository.find();
 
-    if (favorites?.albums.includes(id)) {
-      this.favoritesRepository.update({
-        ...favorites,
-        albums: favorites.albums.filter((albumId) => albumId !== id),
-      });
-    }
+    // if (favorites?.albums.includes(id)) {
+    //   this.favoritesRepository.save({
+    //     ...favorites,
+    //     albums: favorites.albums.filter((albumId) => albumId !== id),
+    //   });
+    // }
   }
 }
