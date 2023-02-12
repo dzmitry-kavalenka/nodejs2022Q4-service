@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as INFO from '../constants';
-import { FavoritesRepository } from '../favorites/favorites.repository';
+// import { FavoritesEntity } from '../favorites/favorites.entity';
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
 import { TrackEntity } from './track.entity';
@@ -11,8 +11,7 @@ import { TrackEntity } from './track.entity';
 export class TrackService {
   constructor(
     @InjectRepository(TrackEntity)
-    private readonly trackRepository: Repository<TrackEntity>,
-    private readonly favoritesRepository: FavoritesRepository,
+    private readonly trackRepository: Repository<TrackEntity>, // private readonly favoritesRepository: FavoritesRepository,
   ) {}
 
   async getAll(): Promise<TrackEntity[]> {
@@ -51,13 +50,13 @@ export class TrackService {
 
     this.trackRepository.delete(track.id);
 
-    const [favorites] = this.favoritesRepository.getAll();
+    // const [favorites] = await this.favoritesRepository.find();
 
-    if (favorites?.tracks.includes(id)) {
-      this.favoritesRepository.update({
-        ...favorites,
-        tracks: favorites.tracks.filter((trackId) => trackId !== id),
-      });
-    }
+    // if (favorites.tracks.includes(id)) {
+    //   this.favoritesRepository.save({
+    //     ...favorites,
+    //     tracks: favorites.tracks.filter((trackId) => trackId !== id),
+    //   });
+    // }
   }
 }
