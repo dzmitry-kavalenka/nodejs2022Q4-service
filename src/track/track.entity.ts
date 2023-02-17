@@ -10,18 +10,24 @@ export class TrackEntity {
   @Column()
   name: string;
 
+  @Column()
+  duration: number;
+
+  @Column({ default: null })
+  artistId: string | null;
+
+  @Column({ default: null })
+  albumId: string | null;
+
   @ManyToOne(() => ArtistEntity, (artist) => artist.id, {
     onDelete: 'SET NULL',
+    nullable: true,
   })
-  @Column({ type: 'uuid', nullable: true, default: null })
-  artistId: string;
+  artist: ArtistEntity;
 
   @ManyToOne(() => AlbumEntity, (album) => album.id, {
     onDelete: 'SET NULL',
+    nullable: true,
   })
-  @Column({ type: 'uuid', nullable: true, default: null })
-  albumId: string;
-
-  @Column()
-  duration: number;
+  album: AlbumEntity;
 }

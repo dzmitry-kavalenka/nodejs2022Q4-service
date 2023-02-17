@@ -23,11 +23,11 @@ export class UserEntity {
   version: number;
 
   @CreateDateColumn()
-  @Transform(({ value }) => Date.parse(value))
+  @Transform(({ value }) => new Date(value).getTime())
   createdAt: number;
 
   @UpdateDateColumn()
-  @Transform(({ value }) => Date.parse(value))
+  @Transform(({ value }) => new Date(value).getTime())
   updatedAt: number;
 
   @Exclude()

@@ -12,6 +12,7 @@ export const dataSourceOptions: DataSourceOptions = {
   username: process.env.DB_DB_USERNAME,
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
+  synchronize: true,
 };
 
 const dataSource = new DataSource(dataSourceOptions);
