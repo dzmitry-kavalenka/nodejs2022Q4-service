@@ -35,8 +35,6 @@ export class FavoritesService {
       },
     });
 
-    console.log(favorites);
-
     return favorites.reduce(
       (acc, { artist, album, track }) => {
         if (artist) {
