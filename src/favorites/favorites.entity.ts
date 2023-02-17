@@ -8,15 +8,30 @@ export class FavoritesEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @ManyToOne(() => ArtistEntity, (artist) => artist.id, { onDelete: 'CASCADE' })
-  @Column('char', { array: true, default: [] })
-  artists: string[];
+  @Column({ default: null })
+  artistId: string;
 
-  @ManyToOne(() => AlbumEntity, (album) => album.id, { onDelete: 'CASCADE' })
-  @Column('char', { array: true, default: [] })
-  albums: string[];
+  @Column({ default: null })
+  albumId: string;
 
-  @ManyToOne(() => TrackEntity, (track) => track.id, { onDelete: 'CASCADE' })
-  @Column('char', { array: true, default: [] })
-  tracks: string[];
+  @Column({ default: null })
+  trackId: string;
+
+  @ManyToOne(() => ArtistEntity, (artist) => artist.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  artist: ArtistEntity;
+
+  @ManyToOne(() => AlbumEntity, (album) => album.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  album: AlbumEntity;
+
+  @ManyToOne(() => TrackEntity, (track) => track.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  track: TrackEntity;
 }

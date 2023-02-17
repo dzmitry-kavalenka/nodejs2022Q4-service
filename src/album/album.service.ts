@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as INFO from '../constants';
-// import { FavoritesEntity } from '../favorites/favorites.entity';
-// import { TrackEntity } from '../track/track.entity';
 import { AlbumEntity } from './album.entity';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
@@ -12,7 +10,7 @@ import { UpdateAlbumDto } from './dto/updateAlbum.dto';
 export class AlbumService {
   constructor(
     @InjectRepository(AlbumEntity)
-    private readonly albumRepository: Repository<AlbumEntity>, // @InjectRepository(TrackEntity) // private readonly trackRepository: Repository<TrackEntity>, // @InjectRepository(FavoritesEntity) // private readonly favoritesRepository: Repository<FavoritesEntity>,
+    private readonly albumRepository: Repository<AlbumEntity>,
   ) {}
 
   async getAll(): Promise<AlbumEntity[]> {
@@ -49,24 +47,5 @@ export class AlbumService {
     const album = await this.getById(id);
 
     await this.albumRepository.delete(album.id);
-
-    // const albumTracks = await this.trackRepository.findBy({
-    //   albumId: album.id,
-    // });
-
-    // await Promise.all(
-    //   albumTracks.map((track) =>
-    //     this.trackRepository.save({ ...track, albumId: null }),
-    //   ),
-    // );
-
-    // const [favorites] = await this.favoritesRepository.find();
-
-    // if (favorites?.albums.includes(id)) {
-    //   this.favoritesRepository.save({
-    //     ...favorites,
-    //     albums: favorites.albums.filter((albumId) => albumId !== id),
-    //   });
-    // }
   }
 }
