@@ -25,8 +25,8 @@
     "db:generate": "npm run typeorm -- migration:generate -d ./db/data-source.ts",
     "db:migrate": "npm run typeorm -- migration:run -d ./db/data-source.ts",
     "db:revert": "npm run typeorm -- migration:revert -d ./db/data-source.ts",
-    "scan:api": "docker scan rest-service-api",
-    "scan:db": "docker scan rest-service-db",
+    "scan:api": "docker scan dzmitrykavalenka/rest-service:api",
+    "scan:db": "docker scan dzmitrykavalenka/rest-service:db",
     "docker": "docker-compose up"
   },
   "dependencies": {
