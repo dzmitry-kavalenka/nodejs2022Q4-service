@@ -12,7 +12,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/src/main",
+    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest --config ./test/jest-e2e.json",
     "test:auth": "cross-env TEST_MODE=auth jest --config ./test/jest-e2e.json",
@@ -24,7 +24,10 @@
     "db:create": "npm run typeorm -- migration:create",
     "db:generate": "npm run typeorm -- migration:generate -d ./db/data-source.ts",
     "db:migrate": "npm run typeorm -- migration:run -d ./db/data-source.ts",
-    "db:revert": "npm run typeorm -- migration:revert -d ./db/data-source.ts"
+    "db:revert": "npm run typeorm -- migration:revert -d ./db/data-source.ts",
+    "scan:api": "docker scan rest-service-api",
+    "scan:db": "docker scan rest-service-db",
+    "docker": "docker-compose up"
   },
   "dependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -45,6 +48,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "swagger-ui-express": "^4.6.1",
     "typeorm": "^0.3.12",
     "uuid": "^8.3.2"
   },
