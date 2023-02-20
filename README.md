@@ -23,6 +23,8 @@ npm install
 
 ## Running application In Docker
 
+`Open Docker Desktop and then run:`
+
 ```
 npm run docker
 ```
