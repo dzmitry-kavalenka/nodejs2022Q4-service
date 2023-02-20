@@ -20,11 +20,6 @@ npm install
 
 - Create a `.env` file by copying `.env.example`
 
-## Running application
-
-```
-npm start
-```
 
 ## Running application In Docker
 
