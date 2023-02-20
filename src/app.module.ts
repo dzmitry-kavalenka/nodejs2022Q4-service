@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { InMemoryDBModule } from '@nestjs-addons/in-memory-db';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from '../db/data-source';
 import { UserModule } from './user/user.module';
@@ -11,7 +10,6 @@ import { FavoritesModule } from './favorites/favorites.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
-    InMemoryDBModule.forRoot({}),
     UserModule,
     ArtistModule,
     AlbumModule,
