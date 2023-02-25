@@ -20,7 +20,7 @@ import {
   ApiForbiddenResponse,
   ApiNoContentResponse,
 } from '@nestjs/swagger';
-import { UserResponse } from '../../swagger/entities/user';
+import { UserResponse } from 'swagger/entities/user';
 import * as INFO from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
