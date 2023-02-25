@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { TrackResponse } from '../../swagger/entities/track';
+import { TrackResponse } from 'swagger/entities/track';
 import * as INFO from '../constants';
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';

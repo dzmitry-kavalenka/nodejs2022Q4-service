@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from 'src/user/dto/createUser.dto';
-import { TokensResponse } from '../../swagger/entities/auth';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '@app/user/user.entity';
+import { CreateUserDto } from '@app/user/dto/createUser.dto';
+import { TokensResponse } from 'swagger/entities/auth';
 import { WROND_CREDENTIALS } from './constants';
 
 @Injectable()

@@ -5,12 +5,12 @@ import {
 } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as INFO from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
 import { INCORRECT_PASSWORD_ERROR } from './constants';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
