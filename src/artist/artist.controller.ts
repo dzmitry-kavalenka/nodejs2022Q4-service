@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ArtistResponse } from '../../swagger/entities/artist';
+import { ArtistResponse } from 'swagger/entities/artist';
 import * as INFO from '../constants';
 import { ArtistEntity } from './artist.entity';
 import { ArtistService } from './artist.service';
