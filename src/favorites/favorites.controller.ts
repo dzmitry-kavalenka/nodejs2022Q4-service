@@ -15,9 +15,10 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { FavoritesResponse } from 'swagger/entities/favorites';
+import { FavoritesResponse } from '../../swagger/entities/favorites';
 import * as INFO from '../constants';
 import { UNPROCESSABLE_ERROR } from './constants';
+
 import { FavoritesService } from './favorites.service';
 
 @Controller('favs')

@@ -93,9 +93,6 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "_moduleAliases": {
-      "@app/": "./dist"
-    }
+    "testEnvironment": "node"
   }
 }
