@@ -1,16 +1,10 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiForbiddenResponse,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TokensResponse } from 'swagger/entities/auth';
 import { CreateUserDto } from '@app/user/dto/createUser.dto';
 import { UserService } from '@app/user/user.service';
 import * as INFO from '../constants';
 import { AuthService } from './auth.service';
-import { WROND_CREDENTIALS } from './constants';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -30,10 +24,8 @@ export class AuthController {
   }
 
   @Post('/login')
-  @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, type: TokensResponse })
   @ApiBadRequestResponse({ description: INFO.REQUIRED_FIELDS_ERROR })
-  @ApiForbiddenResponse({ description: WROND_CREDENTIALS })
   async login(@Body() loginUserDto: CreateUserDto): Promise<TokensResponse> {
     return this.authService.login(loginUserDto);
   }

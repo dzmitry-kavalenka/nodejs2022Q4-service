@@ -7,7 +7,6 @@ export const swaggerSetup = (app: INestApplication) => {
     .setDescription('REST API Documentation')
     .setVersion('1.0.0')
     .addTag('Rest API')
-    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/doc', app, document);
