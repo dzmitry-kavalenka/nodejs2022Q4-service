@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AlbumResponse } from 'swagger/entities/album';
+import { AlbumResponse } from '../../swagger/entities/album';
 import * as INFO from '../constants';
 import { AlbumEntity } from './album.entity';
 import { AlbumService } from './album.service';

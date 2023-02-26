@@ -1,10 +1,10 @@
 import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TokensResponse } from 'swagger/entities/auth';
-import { CreateUserDto } from '@app/user/dto/createUser.dto';
-import { UserService } from '@app/user/user.service';
-import * as INFO from '../constants';
 import { AuthService } from './auth.service';
+import * as INFO from '../constants';
+import { CreateUserDto } from '../user/dto/createUser.dto';
+import { UserService } from '../user/user.service';
+import { TokensResponse } from 'swagger/entities/auth';
 
 @ApiTags('Auth')
 @Controller('auth')
