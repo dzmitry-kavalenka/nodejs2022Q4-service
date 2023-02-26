@@ -1,7 +1,7 @@
 version: "3"
 services:
   db:
-    image: rest-service:db
+    image: dzmitrykavalenka/rest-service:db
     container_name: db
     env_file:
       - docker.env
@@ -17,7 +17,7 @@ services:
       - '5432:5432'
  
   api:
-    image: rest-service:api
+    image: dzmitrykavalenka/rest-service:api
     container_name: api
     build:
       dockerfile: Dockerfile
