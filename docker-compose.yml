@@ -1,0 +1,39 @@
+version: "3"
+services:
+  db:
+    image: dzmitrykavalenka/rest-service:db
+    container_name: db
+    env_file:
+      - docker.env
+    build:
+      dockerfile: ./db/Dockerfile
+    restart: always
+    networks:
+      - rest-service-network
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./pgdata:/var/log/postgresql/postgresql.log
+    ports:
+      - '5432:5432'
+ 
+  api:
+    image: dzmitrykavalenka/rest-service:api
+    container_name: api
+    build:
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    networks:
+      - rest-service-network
+    volumes:
+      - .:/user/src/app
+      - /user/src/app/node_modules
+ 
+networks:
+  rest-service-network:
+    driver: bridge

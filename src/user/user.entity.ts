@@ -1,31 +1,42 @@
-import { InMemoryDBEntity } from '@nestjs-addons/in-memory-db';
-import { Exclude } from 'class-transformer';
 import { hash } from 'bcrypt';
+import { Exclude, Transform } from 'class-transformer';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+  VersionColumn,
+  BeforeUpdate,
+} from 'typeorm';
 
-export class UserEntity implements InMemoryDBEntity {
+@Entity({ name: 'users' })
+export class UserEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
   login: string;
+
+  @VersionColumn()
   version: number;
+
+  @CreateDateColumn()
+  @Transform(({ value }) => new Date(value).getTime())
   createdAt: number;
+
+  @UpdateDateColumn()
+  @Transform(({ value }) => new Date(value).getTime())
   updatedAt: number;
 
   @Exclude()
+  @Column()
   password: string;
 
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
-  }
-
-  async hashPassword(password: string) {
-    this.password = await hash(password, 10);
-  }
-
-  updateVersion() {
-    this.version += 1;
-    this.updateUpdatedAt();
-  }
-
-  private updateUpdatedAt() {
-    this.updatedAt = Date.now();
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await hash(this.password, 10);
   }
 }

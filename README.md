@@ -4,6 +4,7 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ## Downloading
 
@@ -19,10 +20,20 @@ npm install
 
 - Create a `.env` file by copying `.env.example`
 
-## Running application
+
+## Running application In Docker
+
+`Open Docker Desktop and then run:`
 
 ```
-npm start
+npm run docker
+```
+
+### Scan Docker Images
+
+```
+npm run scan:api
+npm run scan:db
 ```
 
 After starting the app on port (4000 as default) you can open

@@ -1,17 +1,13 @@
-import { InMemoryDBModule } from '@nestjs-addons/in-memory-db';
-import { forwardRef, Module } from '@nestjs/common';
-import { FavoritesModule } from '../favorites/favorites.module';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { TrackController } from './track.controller';
-import { TrackRepository } from './track.repository';
+import { TrackEntity } from './track.entity';
 import { TrackService } from './track.service';
 
 @Module({
-  imports: [
-    InMemoryDBModule.forFeature('track'),
-    forwardRef(() => FavoritesModule),
-  ],
+  imports: [TypeOrmModule.forFeature([TrackEntity])],
   controllers: [TrackController],
-  providers: [TrackService, TrackRepository],
-  exports: [TrackRepository],
+  providers: [TrackService],
+  exports: [TypeOrmModule],
 })
 export class TrackModule {}

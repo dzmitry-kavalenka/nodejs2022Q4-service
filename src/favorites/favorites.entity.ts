@@ -1,13 +1,37 @@
-import { InMemoryDBEntity } from '@nestjs-addons/in-memory-db';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ArtistEntity } from '../artist/artist.entity';
+import { AlbumEntity } from '../album/album.entity';
+import { TrackEntity } from '../track/track.entity';
 
-export class FavoritesEntity implements InMemoryDBEntity {
-  id: string; // to be able to use InMemoryDBEntity
+@Entity('favorites')
+export class FavoritesEntity {
+  @PrimaryGeneratedColumn()
+  id: string;
 
-  artists: string[];
-  albums: string[];
-  tracks: string[];
+  @Column({ default: null })
+  artistId: string;
 
-  constructor(partial: Partial<FavoritesEntity>) {
-    Object.assign(this, partial);
-  }
+  @Column({ default: null })
+  albumId: string;
+
+  @Column({ default: null })
+  trackId: string;
+
+  @ManyToOne(() => ArtistEntity, (artist) => artist.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  artist: ArtistEntity;
+
+  @ManyToOne(() => AlbumEntity, (album) => album.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  album: AlbumEntity;
+
+  @ManyToOne(() => TrackEntity, (track) => track.id, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  track: TrackEntity;
 }
