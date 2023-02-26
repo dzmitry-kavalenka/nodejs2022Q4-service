@@ -8,7 +8,6 @@ import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerMiddleware } from './logger/logger.middleware';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { AuthModule } from './auth/auth.module';
     AlbumModule,
     TrackModule,
     FavoritesModule,
-    AuthModule,
   ],
 })
 export class AppModule implements NestModule {
