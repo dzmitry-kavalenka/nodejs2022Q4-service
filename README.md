@@ -4,11 +4,12 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/dzmitry-kavalenka/nodejs2022Q4-service
 ```
 
 ## Installing NPM modules
@@ -17,10 +18,22 @@ git clone {repository URL}
 npm install
 ```
 
-## Running application
+- Create a `.env` file by copying `.env.example`
+
+
+## Running application In Docker
+
+`Open Docker Desktop and then run:`
 
 ```
-npm start
+npm run docker
+```
+
+### Scan Docker Images
+
+```
+npm run scan:api
+npm run scan:db
 ```
 
 After starting the app on port (4000 as default) you can open
