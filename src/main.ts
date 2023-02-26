@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { swaggerSetup } from '../swagger/swaggerSetup';
-import { Logger } from './logger/logger.service';
+// import { Logger } from './logger/logger.service';
 
 dotenv.config();
 

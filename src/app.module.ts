@@ -8,7 +8,7 @@ import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
 // import { LoggerModule } from './logger/logger.module';
-import { LoggerMiddleware } from './logger/logger.middleware';
+// import { LoggerMiddleware } from './logger/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleWare } from './auth/middlewares/auth.middleware';
 

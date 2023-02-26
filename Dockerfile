@@ -4,7 +4,7 @@ WORKDIR /user/src/app
 
 COPY . .
 
-RUN npm ci --legacy-peer-deps --omit=dev
+RUN npm ci --legacy-peer-deps
 
 RUN npm run build
 
