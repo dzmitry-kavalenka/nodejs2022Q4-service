@@ -33,7 +33,7 @@ export class AuthService {
       throw new ForbiddenException(WROND_CREDENTIALS);
     }
 
-    return { accessToken: this.generateJWT(userByLogin) };
+    return { access_token: this.generateJWT(userByLogin) };
   }
 
   generateJWT(user: UserEntity): string {
