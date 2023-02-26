@@ -20,7 +20,7 @@ async function bootstrap() {
     }),
   );
 
-  // app.useLogger(app.get(Logger));
+  app.useLogger(app.get(Logger));
 
   swaggerSetup(app);
 
