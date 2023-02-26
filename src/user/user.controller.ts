@@ -10,6 +10,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {
@@ -19,8 +20,10 @@ import {
   ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiNoContentResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserResponse } from 'swagger/entities/user';
+import { AuthGuard } from '@app/auth/guards/auth.guard';
 import * as INFO from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
@@ -28,8 +31,10 @@ import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { INCORRECT_PASSWORD_ERROR } from './constants';
 
-@ApiTags('User')
+@UseGuards(AuthGuard)
+@ApiBearerAuth()
 @Controller('user')
+@ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
