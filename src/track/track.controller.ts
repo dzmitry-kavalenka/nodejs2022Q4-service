@@ -9,23 +9,28 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiResponse,
+  ApiBearerAuth,
   ApiTags,
 } from '@nestjs/swagger';
 import { TrackResponse } from 'swagger/entities/track';
+import { AuthGuard } from '@app/auth/guards/auth.guard';
 import * as INFO from '../constants';
 import { CreateTrackDto } from './dto/createTrack.dto';
 import { UpdateTrackDto } from './dto/updateTrack.dto';
 import { TrackEntity } from './track.entity';
 import { TrackService } from './track.service';
 
+@ApiBearerAuth()
 @Controller('track')
 @ApiTags('Track')
+@UseGuards(AuthGuard)
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
