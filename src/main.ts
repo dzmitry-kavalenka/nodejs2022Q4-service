@@ -3,14 +3,15 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { swaggerSetup } from '../swagger/swaggerSetup';
-// import { Logger } from './logger/logger.service';
+import { Logger } from './common/logger/logger.service';
+import { HttpExceptionFilter } from './common/exception/exception.filter';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    logger: ['error', 'log', 'warn'],
+    logger: ['error', 'warn', 'log', 'verbose', 'debug'],
   });
 
   app.useGlobalPipes(
@@ -19,6 +20,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // app.useLogger(app.get(Logger));
 
