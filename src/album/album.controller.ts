@@ -9,23 +9,28 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiResponse,
+  ApiBearerAuth,
   ApiTags,
 } from '@nestjs/swagger';
 import { AlbumResponse } from '../../swagger/entities/album';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import * as INFO from '../constants';
 import { AlbumEntity } from './album.entity';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/createAlbum.dto';
 import { UpdateAlbumDto } from './dto/updateAlbum.dto';
 
+@ApiBearerAuth()
 @Controller('album')
 @ApiTags('Album')
+@UseGuards(AuthGuard)
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 

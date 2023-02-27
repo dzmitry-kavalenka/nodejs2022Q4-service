@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FavoritesResponse } from '../../swagger/entities/favorites';
-import * as INFO from '../constants';
+import { FavoritesResponse } from 'swagger/entities/favorites';
 import { TrackEntity } from '../track/track.entity';
 import { AlbumEntity } from '../album/album.entity';
 import { ArtistEntity } from '../artist/artist.entity';
+import * as INFO from '../constants';
 import { FavoritesEntity } from './favorites.entity';
 import { UNPROCESSABLE_ERROR } from './constants';
 

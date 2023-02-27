@@ -3,14 +3,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as INFO from '../constants';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { UserEntity } from './user.entity';
 import { INCORRECT_PASSWORD_ERROR } from './constants';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
@@ -60,5 +60,12 @@ export class UserService {
     const user = await this.getById(id);
 
     return this.userRepository.delete(user.id);
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userId: string) {
+    const token = await hash(refreshToken, 10);
+    await this.userRepository.update(userId, {
+      refreshToken: token,
+    });
   }
 }

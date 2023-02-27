@@ -7,22 +7,26 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiResponse,
+  ApiBearerAuth,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FavoritesResponse } from '../../swagger/entities/favorites';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import * as INFO from '../constants';
 import { UNPROCESSABLE_ERROR } from './constants';
-
 import { FavoritesService } from './favorites.service';
 
+@ApiBearerAuth()
 @Controller('favs')
 @ApiTags('Favorites')
+@UseGuards(AuthGuard)
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
