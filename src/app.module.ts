@@ -7,14 +7,14 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { TrackModule } from './track/track.module';
 import { FavoritesModule } from './favorites/favorites.module';
-// import { LoggerModule } from './logger/logger.module';
-// import { LoggerMiddleware } from './logger/logger.middleware';
+import { LoggerModule } from './common/logger/logger.module';
+import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleWare } from './auth/middlewares/auth.middleware';
 
 @Module({
   imports: [
-    // LoggerModule,
+    LoggerModule,
     TypeOrmModule.forRoot(dataSourceOptions),
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
@@ -28,6 +28,6 @@ import { AuthMiddleWare } from './auth/middlewares/auth.middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(AuthMiddleWare).forRoutes('*');
-    // consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

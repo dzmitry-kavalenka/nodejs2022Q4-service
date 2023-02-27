@@ -9,13 +9,16 @@ export class LoggerMiddleware implements NestMiddleware {
   }
 
   use(request: Request, response: Response, next: NextFunction) {
-    response.on('close', () => {
-      const { method, originalUrl, body } = request;
-      const { statusCode, statusMessage } = response;
+    response.on('finish', () => {
+      const { method, body, params, path } = request;
+      const { statusCode } = response;
 
-      const message = `${method} ${originalUrl} ${statusCode} ${statusMessage} ${JSON.stringify(
-        body,
-      )}`;
+      const message = `
+      method: ${method}
+      url: ${path}
+      params: ${JSON.stringify(params)}
+      code: ${statusCode}
+      ${method === 'POST' ? `body: ${JSON.stringify(body)}` : ''}`;
 
       if (statusCode >= 500) {
         return this.logger.error(message);
