@@ -34,6 +34,12 @@ export class UserEntity {
   @Column()
   password: string;
 
+  @Column({
+    nullable: true,
+  })
+  @Exclude()
+  public refreshToken?: string;
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {
